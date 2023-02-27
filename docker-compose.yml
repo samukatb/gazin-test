@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   backend:
+    container_name: "gazin-backend"
     build:
       context: .
       dockerfile: ./backend/Dockerfile
@@ -17,13 +18,27 @@ services:
       - POSTGRES_PASSWORD=gazin
       - POSTGRES_DB=gazin
   db:
+    container_name: "gazin-db"
     image: postgres
     restart: always
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=gazin
       - POSTGRES_PASSWORD=gazin
       - POSTGRES_DB=gazin
+  db-test:
+    container_name: "gazin-db-test"
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5433"
+    environment:
+      - POSTGRES_USER=gazintest
+      - POSTGRES_PASSWORD=gazintest
+      - POSTGRES_DB=gazintest
   frontend:
+    container_name: "gazin-frontend"
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
