@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Level } from 'src/modules/level/entities/level.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { SexType } from '../enums/sex.enum';
 
 @Entity('developers')
@@ -20,6 +27,13 @@ export class Developer {
 
   @Column()
   hobby: string;
+
+  @Column()
+  level_id: number;
+
+  @ManyToOne(() => Level, (level) => level.developers)
+  @JoinColumn({ name: 'level_id' })
+  level: Level;
 
   get age(): number {
     const diffInMs = Date.now() - this.birthdate.getTime();
