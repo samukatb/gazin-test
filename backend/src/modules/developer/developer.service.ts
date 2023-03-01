@@ -4,6 +4,7 @@ import { AppError } from 'src/shared/database/utils/app-error.exception';
 import { Repository } from 'typeorm';
 import { LevelService } from '../level/level.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
+import { DeveloperQueryDto } from './dto/developer-query.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
 import { Developer } from './entities/developer.entity';
 
@@ -32,8 +33,24 @@ export class DeveloperService {
     return await this.developerRepository.save(developer);
   }
 
-  async findAll() {
-    return await this.developerRepository.find();
+  async findAll(query: DeveloperQueryDto): Promise<{
+    developers: Developer[];
+    total: number;
+    currentPage: number;
+    perPage: number;
+  }> {
+    const { page = 1, limit = 10 } = query;
+    const [developers, total] = await this.developerRepository.findAndCount({
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    return {
+      developers,
+      total,
+      currentPage: page,
+      perPage: limit,
+    };
   }
 
   async findOne(id: number) {

@@ -10,9 +10,11 @@ import {
   ClassSerializerInterceptor,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { DeveloperService } from './developer.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
+import { DeveloperQueryDto } from './dto/developer-query.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -26,8 +28,8 @@ export class DeveloperController {
   }
 
   @Get()
-  findAll() {
-    return this.developerService.findAll();
+  findAll(@Query() query: DeveloperQueryDto) {
+    return this.developerService.findAll(query);
   }
 
   @Put(':id')
