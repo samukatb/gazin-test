@@ -6,7 +6,7 @@ import { DatabaseModule } from './shared/database/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     DeveloperModule,
     LevelModule,
