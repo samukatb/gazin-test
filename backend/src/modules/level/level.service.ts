@@ -33,7 +33,10 @@ export class LevelService {
   }
 
   async findOne(id: number) {
-    const level = await this.levelRepository.findOneBy({ id });
+    const level = await this.levelRepository.findOne({
+      where: { id },
+      relations: ['developers'],
+    });
 
     if (!level) {
       throw new AppError({
@@ -54,7 +57,22 @@ export class LevelService {
     return await this.levelRepository.save(updatedLevel);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} level`;
+  async remove(id: number) {
+    const level = await this.findOne(id);
+
+    if (level.developers.length) {
+      throw new AppError({
+        id: 'LEVEL_HAS_DEVELOPERS',
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Level has developers',
+      });
+    }
+
+    await this.levelRepository
+      .createQueryBuilder()
+      .delete()
+      .where('id = :id', { id })
+      .execute();
+    return;
   }
 }
