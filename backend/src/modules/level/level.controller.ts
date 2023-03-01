@@ -10,10 +10,12 @@ import {
   ClassSerializerInterceptor,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { LevelService } from './level.service';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
+import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('levels')
@@ -26,8 +28,8 @@ export class LevelController {
   }
 
   @Get()
-  findAll() {
-    return this.levelService.findAll();
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.levelService.findAll(query);
   }
 
   @Put(':id')

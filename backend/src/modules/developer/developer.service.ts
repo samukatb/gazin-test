@@ -1,10 +1,11 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AppError } from 'src/shared/database/utils/app-error.exception';
-import { Repository } from 'typeorm';
+import { PaginationResponse } from 'src/@types/pagination-response.type';
+import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
+import { AppError } from 'src/shared/utils/app-error.exception';
+import { Like, Repository } from 'typeorm';
 import { LevelService } from '../level/level.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
-import { DeveloperQueryDto } from './dto/developer-query.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
 import { Developer } from './entities/developer.entity';
 
@@ -33,20 +34,28 @@ export class DeveloperService {
     return await this.developerRepository.save(developer);
   }
 
-  async findAll(query: DeveloperQueryDto): Promise<{
-    developers: Developer[];
-    total: number;
-    currentPage: number;
-    perPage: number;
-  }> {
-    const { page = 1, limit = 10 } = query;
+  async findAll(
+    query: PaginationQueryDto,
+  ): Promise<PaginationResponse<Developer>> {
+    const { page = 1, limit = 10, search } = query;
+    const where = search ? { name: Like(`%${search}%`) } : {};
+
     const [developers, total] = await this.developerRepository.findAndCount({
+      where,
       take: limit,
       skip: (page - 1) * limit,
     });
 
+    if (!developers.length) {
+      throw new AppError({
+        id: 'DEVELOPERS_NOT_FOUND',
+        status: HttpStatus.NOT_FOUND,
+        message: 'Developers not found',
+      });
+    }
+
     return {
-      developers,
+      data: developers,
       total,
       currentPage: page,
       perPage: limit,

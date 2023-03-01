@@ -1,7 +1,9 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AppError } from 'src/shared/database/utils/app-error.exception';
-import { Repository } from 'typeorm';
+import { PaginationResponse } from 'src/@types/pagination-response.type';
+import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
+import { AppError } from 'src/shared/utils/app-error.exception';
+import { Like, Repository } from 'typeorm';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
 import { Level } from './entities/level.entity';
@@ -28,8 +30,30 @@ export class LevelService {
     }
   }
 
-  async findAll() {
-    return await this.levelRepository.find();
+  async findAll(query: PaginationQueryDto): Promise<PaginationResponse<Level>> {
+    const { page = 1, limit = 10, search } = query;
+    const where = search ? { name: Like(`%${search}%`) } : {};
+
+    const [levels, total] = await this.levelRepository.findAndCount({
+      where,
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    if (!levels.length) {
+      throw new AppError({
+        id: 'DEVELOPERS_NOT_FOUND',
+        status: HttpStatus.NOT_FOUND,
+        message: 'Developers not found',
+      });
+    }
+
+    return {
+      data: levels,
+      total,
+      currentPage: page,
+      perPage: limit,
+    };
   }
 
   async findOne(id: number) {

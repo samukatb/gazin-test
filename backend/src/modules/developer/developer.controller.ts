@@ -12,9 +12,9 @@ import {
   HttpStatus,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
 import { DeveloperService } from './developer.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
-import { DeveloperQueryDto } from './dto/developer-query.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,7 +28,7 @@ export class DeveloperController {
   }
 
   @Get()
-  findAll(@Query() query: DeveloperQueryDto) {
+  findAll(@Query() query: PaginationQueryDto) {
     return this.developerService.findAll(query);
   }
 
