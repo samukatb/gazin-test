@@ -15,7 +15,7 @@
             class="mr-4"
           />
           <VBtn height="60" @click="isModalOpened = !isModalOpened">
-            Add developer
+            Edit developer
           </VBtn>
         </div>
       </VCardTitle>
@@ -42,7 +42,12 @@
               <td>{{ item.columns.hobby }}</td>
               <td>{{ item.columns.level_id }}</td>
               <td align="right">
-                <VBtn class="mr-2" icon size="24" @click="loading = false">
+                <VBtn
+                  class="mr-2"
+                  icon
+                  size="24"
+                  @click="editDeveloper(item.raw)"
+                >
                   <VIcon size="16"> mdi-pencil-outline </VIcon>
                 </VBtn>
                 <VBtn icon size="24" @click="removeDeveloper(item.raw.id)">
@@ -50,12 +55,6 @@
                 </VBtn>
               </td>
             </tr>
-          </template>
-
-          <template #footer>
-            <VRow>
-              <VCol cols="12"> dasdasds </VCol>
-            </VRow>
           </template>
 
           <template v-slot:no-data>
@@ -71,6 +70,13 @@
       :open="isModalOpened"
       @success="createdDeveloper"
       @close="isModalOpened = !isModalOpened"
+    />
+
+    <EditDeveloper
+      :open="isModalEditOpened"
+      :developer="developer"
+      @success="editedDeveloper"
+      @close="isModalEditOpened = !isModalEditOpened"
     />
 
     <VSnackbar v-model="snackbar" location="top right" :timeout="3000">
@@ -93,13 +99,14 @@
 </template>
 
 <script lang="ts">
-import { useAppStore } from "@/store/app";
+import { Developer, useAppStore } from "@/store/app";
 import { IDevelopersData } from "@/@types/developers-data.type";
 import AddDeveloper from "./AddDeveloper.vue";
 import ConfirmAction from "@/components/ConfirmAction.vue";
+import EditDeveloper from "./EditDeveloper.vue";
 
 export default {
-  components: { AddDeveloper, ConfirmAction },
+  components: { AddDeveloper, ConfirmAction, EditDeveloper },
 
   data(): IDevelopersData {
     return {
@@ -111,9 +118,11 @@ export default {
       options: {},
       error: false,
       isModalOpened: false,
+      isModalEditOpened: false,
       isModalRemoveOpened: false,
       snackbar: false,
       snackbarMessage: "",
+      developer: {},
       developerId: null,
       loadingRemove: false,
       page: 1,
@@ -194,6 +203,16 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    editDeveloper(developer: Developer) {
+      this.developer = developer;
+      this.isModalEditOpened = !this.isModalEditOpened;
+    },
+
+    editedDeveloper() {
+      this.openSnackbar("Developer edited successfully");
+      this.getDataFromAPI();
     },
 
     removeDeveloper(id: number) {

@@ -7,7 +7,7 @@ interface Level {
   name: string;
 }
 
-interface Developer {
+export interface Developer {
   id: number;
   name: string;
   birthDate: string;

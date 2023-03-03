@@ -57,9 +57,9 @@
             color="primary"
             :loading="loading"
             :disabled="!isFormValid"
-            @click="addDeveloper"
+            @click="editDeveloper"
           >
-            Add
+            Edit
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -71,12 +71,17 @@
 import { useAppStore } from "@/store/app";
 
 export default {
-  name: "AddDeveloper",
+  name: "EditDeveloper",
 
   props: {
     open: {
       type: Boolean,
       default: false,
+    },
+
+    developer: {
+      type: [Object],
+      default: () => ({}),
     },
   },
 
@@ -112,6 +117,14 @@ export default {
   watch: {
     open() {
       this.dialog = this.open;
+
+      this.form = {
+        name: this.developer.name,
+        birthdate: this.developer.birthdate.split("T")[0],
+        hobby: this.developer.hobby,
+        sex: this.developer.sex,
+        level_id: this.developer.level_id,
+      };
     },
   },
 
@@ -127,7 +140,7 @@ export default {
       }
     },
 
-    async addDeveloper() {
+    async editDeveloper() {
       if (!this.isFormValid || this.loading) return;
 
       const appStore = useAppStore();

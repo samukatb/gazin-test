@@ -37,13 +37,17 @@ export class DeveloperService {
   async findAll(
     query: PaginationQueryDto,
   ): Promise<PaginationResponse<Developer>> {
-    const { page = 1, limit = 10, search } = query;
+    const { page = 1, limit = 10, search, orderBy } = query;
     const where = search ? { name: Like(`%${search}%`) } : {};
 
     const [developers, total] = await this.developerRepository.findAndCount({
       where,
       take: limit,
       skip: (page - 1) * limit,
+      relations: ['level'],
+      order: {
+        name: orderBy,
+      },
     });
 
     if (!developers.length) {

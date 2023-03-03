@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { Level } from 'src/modules/level/entities/level.entity';
 import {
   Column,
@@ -29,6 +29,7 @@ export class Developer {
   @Column()
   hobby: string;
 
+  @Exclude()
   @Column()
   level_id: number;
 

@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { OrderByType } from 'src/modules/developer/enums/orderBy.enum';
 
 export class PaginationQueryDto {
   @IsOptional()
@@ -15,4 +16,8 @@ export class PaginationQueryDto {
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
   limit?: number;
+
+  @IsOptional()
+  @IsEnum(OrderByType)
+  orderBy?: OrderByType;
 }

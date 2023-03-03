@@ -8,7 +8,9 @@ export interface IDevelopersData {
   error: boolean;
   isModalOpened: boolean;
   isModalRemoveOpened: boolean;
+  isModalEditOpened: boolean;
   loadingRemove: false;
+  developer: Object;
   developerId: null | number;
   snackbar: boolean;
   snackbarMessage: string;
