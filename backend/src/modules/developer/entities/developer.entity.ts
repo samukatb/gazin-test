@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { Level } from 'src/modules/level/entities/level.entity';
 import {
   Column,
@@ -35,9 +36,15 @@ export class Developer {
   @JoinColumn({ name: 'level_id' })
   level: Level;
 
-  get age(): number {
-    const diffInMs = Date.now() - this.birthdate.getTime();
-    const ageDate = new Date(diffInMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  @Expose({ name: 'age' })
+  getAge(): number {
+    const today = new Date();
+    const birthDate = new Date(this.birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   }
 }
