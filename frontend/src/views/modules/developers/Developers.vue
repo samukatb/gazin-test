@@ -193,12 +193,14 @@ export default {
   },
   methods: {
     getDataFromAPI() {
+      console.log(this.options?.sortBy[0]);
       this.loading = true;
       try {
         this.appStore.getDevelopers({
           page: this.options.page,
           limit: this.options.itemsPerPage,
           search: this.search,
+          orderBy: this.options?.sortBy[0]?.order.toUpperCase(),
         });
       } finally {
         this.loading = false;
