@@ -5,6 +5,7 @@ import { defineStore } from "pinia";
 export interface Level {
   id: number;
   name: string;
+  orderBy?: "asc" | "desc";
 }
 
 export interface Developer {
@@ -41,7 +42,7 @@ interface AppState {
   levels: ApiResponse<Level>;
 }
 
-interface QueryDevelopers {
+interface QuerySearch {
   search?: string;
   page: number;
   limit: number;
@@ -69,7 +70,7 @@ export const useAppStore = defineStore("app", {
   }),
 
   actions: {
-    async getDevelopers(query?: QueryDevelopers) {
+    async getDevelopers(query?: QuerySearch) {
       await GazinAPI.get(routes.developers, {
         params: query,
       })
@@ -98,7 +99,7 @@ export const useAppStore = defineStore("app", {
       await GazinAPI.delete(`${routes.developers}/${id}`);
     },
 
-    async getLevels(query?: QueryDevelopers) {
+    async getLevels(query?: QuerySearch) {
       await GazinAPI.get(routes.levels, {
         params: query,
       })
