@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import { Developer } from 'src/modules/developer/entities/developer.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -9,6 +10,12 @@ export class Level {
   @Column()
   name: string;
 
-  @OneToMany(() => Developer, (developer) => developer.level)
+  @Exclude()
+  @OneToMany(() => Developer, (developer) => developer.level, { eager: true })
   developers: Developer[];
+
+  @Expose({ name: 'total_developers' })
+  totalDevelopers(): number {
+    return this.developers?.length;
+  }
 }

@@ -1,4 +1,4 @@
-export interface IDevelopersData {
+export interface IData {
   appStore: any;
   loading: boolean;
   itemsPerPage: number;
@@ -10,8 +10,6 @@ export interface IDevelopersData {
   isModalRemoveOpened: boolean;
   isModalEditOpened: boolean;
   loadingRemove: false;
-  developer: Object;
-  developerId: null | number;
   snackbar: boolean;
   snackbarMessage: string;
   page: number;
@@ -21,4 +19,14 @@ export interface IDevelopersData {
     sortable: boolean;
     align?: string;
   }[];
+}
+
+export interface IDevelopersData extends IData {
+  developer: Object;
+  developerId: null | number;
+}
+
+export interface ILevelsData extends IData {
+  level: Object;
+  levelId: null | number;
 }

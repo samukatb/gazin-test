@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationResponse } from 'src/@types/pagination-response.type';
 import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
 import { AppError } from 'src/shared/utils/app-error.exception';
-import { Like, Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { LevelService } from '../level/level.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
@@ -40,14 +40,25 @@ export class DeveloperService {
     const { page = 1, limit = 10, search, orderBy } = query;
     const where = search ? { name: Like(`%${search}%`) } : {};
 
+    const findOptions: FindManyOptions<Developer> = {
+      where,
+      order: {
+        name: orderBy,
+      },
+    };
+
+    if (limit != -1) {
+      findOptions.skip = (page - 1) * limit;
+      findOptions.take = limit;
+    }
+
     const [developers, total] = await this.developerRepository.findAndCount({
       where,
-      take: limit,
-      skip: (page - 1) * limit,
       relations: ['level'],
       order: {
         name: orderBy,
       },
+      ...findOptions,
     });
 
     if (!developers.length) {
@@ -62,7 +73,7 @@ export class DeveloperService {
       data: developers,
       total,
       currentPage: page,
-      perPage: limit,
+      perPage: limit > 0 ? limit : total,
     };
   }
 

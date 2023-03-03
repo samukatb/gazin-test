@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="400" persistent>
     <v-card class="pa-4">
       <v-card-title class="d-flex justify-space-between align-center">
-        <div class="text-h5">Add developer</div>
+        <div class="text-h5">Edit developer</div>
         <v-btn icon size="24" @click="closeModal">
           <v-icon size="16">mdi-close</v-icon>
         </v-btn>
@@ -44,13 +44,13 @@
         />
 
         <label>Level</label>
-        <v-text-field
+        <v-select
           v-model="form.level_id"
-          placeholder="Choose a level"
-          required
+          :items="levels.data"
+          item-value="id"
+          item-title="name"
           :rules="[(v) => !!v || 'Level is required']"
         />
-
         <v-card-actions class="d-flex justify-end">
           <v-btn @click="closeModal">Cancel</v-btn>
           <v-btn
@@ -112,6 +112,12 @@ export default {
     dateRule() {
       return (v: string) => this.isValidDate(v) || "Date must be in the past";
     },
+
+    levels() {
+      const appStore = useAppStore();
+
+      return appStore.levels;
+    },
   },
 
   watch: {
@@ -123,7 +129,7 @@ export default {
         birthdate: this.developer.birthdate.split("T")[0],
         hobby: this.developer.hobby,
         sex: this.developer.sex,
-        level_id: this.developer.level_id,
+        level_id: this.developer.level.id,
       };
     },
   },
@@ -152,7 +158,7 @@ export default {
       };
 
       await appStore
-        .createDeveloper(payload)
+        .updateDeveloper(this.developer.id, payload)
         .then(() => {
           this.$emit("success");
           this.closeModal();

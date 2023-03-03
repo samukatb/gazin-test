@@ -14,8 +14,12 @@
             hide-details
             class="mr-4"
           />
-          <VBtn height="60" @click="isModalOpened = !isModalOpened">
-            Edit developer
+          <VBtn
+            color="primary"
+            height="54"
+            @click="isModalOpened = !isModalOpened"
+          >
+            Add developer
           </VBtn>
         </div>
       </VCardTitle>
@@ -38,9 +42,9 @@
                 {{ new Date(item.columns.birthdate).toLocaleDateString() }}
               </td>
               <td>{{ item.columns.age }} years old</td>
-              <td>{{ item.columns.sex }}</td>
+              <td>{{ item.columns.sex === "M" ? "Male" : "Female" }}</td>
               <td>{{ item.columns.hobby }}</td>
-              <td>{{ item.columns.level_id }}</td>
+              <td>{{ item.columns.level.name }}</td>
               <td align="right">
                 <VBtn
                   class="mr-2"
@@ -79,6 +83,13 @@
       @close="isModalEditOpened = !isModalEditOpened"
     />
 
+    <ConfirmAction
+      :open="isModalRemoveOpened"
+      text="Are you sure you want to delete the developer?"
+      @confirm="confirmRemoveDeveloper"
+      @close="isModalRemoveOpened = !isModalRemoveOpened"
+    />
+
     <VSnackbar v-model="snackbar" location="top right" :timeout="3000">
       {{ snackbarMessage }}
 
@@ -88,13 +99,6 @@
         </VBtn>
       </template>
     </VSnackbar>
-
-    <ConfirmAction
-      :open="isModalRemoveOpened"
-      text="Are you sure you want to delete the developer?"
-      @confirm="confirmRemoveDeveloper"
-      @close="isModalRemoveOpened = !isModalRemoveOpened"
-    />
   </div>
 </template>
 
@@ -154,7 +158,7 @@ export default {
         },
         {
           title: "Level",
-          key: "level_id",
+          key: "level",
           sortable: false,
         },
         {
@@ -192,18 +196,19 @@ export default {
     },
   },
   methods: {
-    getDataFromAPI() {
-      console.log(this.options?.sortBy[0]);
+    async getDataFromAPI() {
       this.loading = true;
       try {
-        this.appStore.getDevelopers({
+        await this.appStore.getDevelopers({
           page: this.options.page,
           limit: this.options.itemsPerPage,
           search: this.search,
           orderBy: this.options?.sortBy[0]?.order.toUpperCase(),
         });
       } finally {
-        this.loading = false;
+        setTimeout(() => {
+          this.loading = false;
+        }, 500);
       }
     },
 
@@ -212,9 +217,10 @@ export default {
       this.isModalEditOpened = !this.isModalEditOpened;
     },
 
-    editedDeveloper() {
+    async editedDeveloper() {
       this.openSnackbar("Developer edited successfully");
-      this.getDataFromAPI();
+      await this.getDataFromAPI();
+      this.developer = {};
     },
 
     removeDeveloper(id: number) {

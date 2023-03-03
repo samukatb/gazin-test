@@ -2,7 +2,7 @@
 import GazinAPI from "@/api/axios";
 import { defineStore } from "pinia";
 
-interface Level {
+export interface Level {
   id: number;
   name: string;
 }
@@ -25,6 +25,10 @@ interface DeveloperForm {
   level_id: number;
 }
 
+interface LevelForm {
+  name: string;
+}
+
 interface ApiResponse<T> {
   data: T[];
   total: number;
@@ -40,7 +44,7 @@ interface AppState {
 interface QueryDevelopers {
   search?: string;
   page: number;
-  perPage: number;
+  limit: number;
 }
 
 const routes = {
@@ -86,14 +90,41 @@ export const useAppStore = defineStore("app", {
       await GazinAPI.post(routes.developers, developer);
     },
 
+    async updateDeveloper(id: number, developer: DeveloperForm) {
+      await GazinAPI.put(`${routes.developers}/${id}`, developer);
+    },
+
     async deleteDeveloper(id: number) {
       await GazinAPI.delete(`${routes.developers}/${id}`);
     },
 
-    async getLevels() {
-      await GazinAPI.get(routes.levels).then((response) => {
-        this.levels = response.data;
-      });
+    async getLevels(query?: QueryDevelopers) {
+      await GazinAPI.get(routes.levels, {
+        params: query,
+      })
+        .then((response) => {
+          this.levels = response.data;
+        })
+        .catch(() => {
+          this.levels = {
+            data: [],
+            total: 0,
+            currentPage: 0,
+            perPage: 0,
+          };
+        });
+    },
+
+    async createLevel(level: LevelForm) {
+      await GazinAPI.post(routes.levels, level);
+    },
+
+    async updateLevel(id: number, level: LevelForm) {
+      await GazinAPI.put(`${routes.levels}/${id}`, level);
+    },
+
+    async deleteLevel(id: number) {
+      await GazinAPI.delete(`${routes.levels}/${id}`);
     },
   },
 });

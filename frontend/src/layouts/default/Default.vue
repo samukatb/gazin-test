@@ -1,14 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar color="primary" prominent>
+    <v-app-bar color="primary" prominent height="60">
       <v-app-bar-nav-icon
         variant="text"
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Gazin</v-toolbar-title>
-
-      <v-spacer />
+      <v-img src="../../assets/logo.svg" alt="Logo" width="188" height="48" />
 
       <v-btn @click="toggleTheme">
         <v-icon>mdi-theme-light-dark</v-icon>

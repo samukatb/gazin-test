@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="400" persistent>
     <v-card class="pa-4">
       <v-card-title class="d-flex justify-space-between align-center">
-        <div class="text-h5">Add developer</div>
+        <div class="text-h5">Edit level</div>
         <v-btn icon size="24" @click="closeModal">
           <v-icon size="16">mdi-close</v-icon>
         </v-btn>
@@ -16,51 +16,15 @@
           :rules="[(v) => !!v || 'Name is required']"
         />
 
-        <label>Birthdate</label>
-        <v-text-field
-          v-model="form.birthdate"
-          type="date"
-          placeholder="Birth Date"
-          required
-          :rules="[(v) => !!v || 'Birth date is required', dateRule]"
-          mask="##/##/####"
-        />
-
-        <label>Sex</label>
-        <v-select
-          v-model="form.sex"
-          :items="sexOptions"
-          item-value="value"
-          item-title="text"
-          :rules="[(v) => !!v || 'Sex is required']"
-        />
-
-        <label>Hobby</label>
-        <v-text-field
-          v-model="form.hobby"
-          placeholder="E.g. Programming, Gaming, etc."
-          required
-          :rules="[(v) => !!v || 'Hobby is required']"
-        />
-
-        <label>Level</label>
-        <v-select
-          v-model="form.level_id"
-          :items="levels.data"
-          item-value="id"
-          item-title="name"
-          :rules="[(v) => !!v || 'Level is required']"
-        />
-
         <v-card-actions class="d-flex justify-end">
           <v-btn @click="closeModal">Cancel</v-btn>
           <v-btn
             color="primary"
             :loading="loading"
             :disabled="!isFormValid"
-            @click="addDeveloper"
+            @click="editLevel"
           >
-            Add
+            Edit
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -72,12 +36,17 @@
 import { useAppStore } from "@/store/app";
 
 export default {
-  name: "AddDeveloper",
+  name: "EditLevel",
 
   props: {
     open: {
       type: Boolean,
       default: false,
+    },
+
+    level: {
+      type: [Object],
+      default: () => ({}),
     },
   },
 
@@ -85,17 +54,8 @@ export default {
     return {
       dialog: false,
       loading: false,
-      sexOptions: [
-        { value: "M", text: "Male" },
-        { value: "F", text: "Female" },
-        { value: "O", text: "Other" },
-      ],
       form: {
         name: "",
-        birthdate: "",
-        hobby: "",
-        sex: "",
-        level_id: "",
       },
     };
   },
@@ -104,25 +64,15 @@ export default {
     isFormValid() {
       return Object.values(this.form).every((value) => value !== "");
     },
-
-    dateRule() {
-      return (v: string) => this.isValidDate(v) || "Date must be in the past";
-    },
-
-    levels() {
-      const appStore = useAppStore();
-
-      return appStore.levels;
-    },
-  },
-
-  created() {
-    this.getLevels();
   },
 
   watch: {
     open() {
       this.dialog = this.open;
+
+      this.form = {
+        name: this.level.name,
+      };
     },
   },
 
@@ -138,19 +88,13 @@ export default {
       }
     },
 
-    async addDeveloper() {
+    async editLevel() {
       if (!this.isFormValid || this.loading) return;
 
       const appStore = useAppStore();
-      const level_id = parseInt(this.form.level_id);
-
-      const payload = {
-        ...this.form,
-        level_id,
-      };
 
       await appStore
-        .createDeveloper(payload)
+        .updateLevel(this.level.id, this.form)
         .then(() => {
           this.$emit("success");
           this.closeModal();
@@ -158,15 +102,6 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    },
-
-    async getLevels() {
-      const appStore = useAppStore();
-
-      await appStore.getLevels({
-        page: 1,
-        limit: -1,
-      });
     },
 
     closeModal() {

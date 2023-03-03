@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationResponse } from 'src/@types/pagination-response.type';
 import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
 import { AppError } from 'src/shared/utils/app-error.exception';
-import { Like, Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
 import { Level } from './entities/level.entity';
@@ -31,14 +31,24 @@ export class LevelService {
   }
 
   async findAll(query: PaginationQueryDto): Promise<PaginationResponse<Level>> {
-    const { page = 1, limit = 10, search } = query;
+    const { page = 1, limit = 10, search, orderBy } = query;
     const where = search ? { name: Like(`%${search}%`) } : {};
 
-    const [levels, total] = await this.levelRepository.findAndCount({
+    const findOptions: FindManyOptions<Level> = {
       where,
-      take: limit,
-      skip: (page - 1) * limit,
-    });
+      order: {
+        name: orderBy,
+      },
+    };
+
+    if (limit != -1) {
+      findOptions.skip = (page - 1) * limit;
+      findOptions.take = limit;
+    }
+
+    const [levels, total] = await this.levelRepository.findAndCount(
+      findOptions,
+    );
 
     if (!levels.length) {
       throw new AppError({
@@ -52,7 +62,7 @@ export class LevelService {
       data: levels,
       total,
       currentPage: page,
-      perPage: limit,
+      perPage: limit > 0 ? limit : total,
     };
   }
 
