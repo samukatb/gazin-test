@@ -1,13 +1,24 @@
 import { Module } from '@nestjs/common';
-import { LevelService } from './level.service';
 import { LevelController } from './level.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Level } from './entities/level.entity';
+import { DB_NAME } from '../../../src/shared/utils/constants';
+import CreateLevelService from './services/create-level.service';
+import UpdateLevelService from './services/update-level.service';
+import FindManyLevelsService from './services/find-many-levels.service';
+import DeleteLevelService from './services/delete-level.service';
+import FindLevelService from './services/find-level.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Level], 'DB')],
+  imports: [TypeOrmModule.forFeature([Level], DB_NAME)],
   controllers: [LevelController],
-  providers: [LevelService],
-  exports: [LevelService, TypeOrmModule],
+  providers: [
+    CreateLevelService,
+    UpdateLevelService,
+    FindManyLevelsService,
+    DeleteLevelService,
+    FindLevelService,
+  ],
+  exports: [FindLevelService, TypeOrmModule],
 })
 export class LevelModule {}

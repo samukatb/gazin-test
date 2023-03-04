@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Level } from 'src/modules/level/entities/level.entity';
+import { Level } from '../../../../src/modules/level/entities/level.entity';
 import {
   Column,
   Entity,
@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SexType } from '../enums/sex.enum';
+import { SexType } from '../../../modules/developer/enums/sex.enum';
 
 @Entity('developers')
 export class Developer {
@@ -35,10 +35,10 @@ export class Developer {
 
   @ManyToOne(() => Level, (level) => level.developers)
   @JoinColumn({ name: 'level_id' })
-  level: Level;
+  level?: Level;
 
   @Expose({ name: 'age' })
-  getAge(): number {
+  getAge?(): number {
     const today = new Date();
     const birthDate = new Date(this.birthdate);
     let age = today.getFullYear() - birthDate.getFullYear();

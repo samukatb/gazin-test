@@ -12,34 +12,42 @@ import {
   HttpStatus,
   Query,
 } from '@nestjs/common';
-import { LevelService } from './level.service';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
-import { PaginationQueryDto } from 'src/shared/dto/pagination.dto';
+import { PaginationQueryDto } from '../../shared/dto/pagination.dto';
+import CreateLevelService from './services/create-level.service';
+import FindManyLevelsService from './services/find-many-levels.service';
+import UpdateLevelService from './services/update-level.service';
+import DeleteLevelService from './services/delete-level.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('levels')
 export class LevelController {
-  constructor(private readonly levelService: LevelService) {}
+  constructor(
+    private readonly createLevelService: CreateLevelService,
+    private readonly findManyLevelsService: FindManyLevelsService,
+    private readonly updateLevelService: UpdateLevelService,
+    private readonly deleteLevelService: DeleteLevelService,
+  ) {}
 
   @Post()
   create(@Body() createLevelDto: CreateLevelDto) {
-    return this.levelService.create(createLevelDto);
+    return this.createLevelService.execute(createLevelDto);
   }
 
   @Get()
-  findAll(@Query() query: PaginationQueryDto) {
-    return this.levelService.findAll(query);
+  findAll(@Query() query?: PaginationQueryDto) {
+    return this.findManyLevelsService.execute(query);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateLevelDto: UpdateLevelDto) {
-    return this.levelService.update(+id, updateLevelDto);
+    return this.updateLevelService.execute(+id, updateLevelDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.levelService.remove(+id);
+    return this.deleteLevelService.execute(+id);
   }
 }

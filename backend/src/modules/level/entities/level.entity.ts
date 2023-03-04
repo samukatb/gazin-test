@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Developer } from 'src/modules/developer/entities/developer.entity';
+import { Developer } from '../../../../src/modules/developer/entities/developer.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('levels')

@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { OrderByType } from 'src/modules/developer/enums/orderBy.enum';
+import { OrderByType } from '../../modules/developer/enums/orderBy.enum';
 
 export class PaginationQueryDto {
   @IsOptional()

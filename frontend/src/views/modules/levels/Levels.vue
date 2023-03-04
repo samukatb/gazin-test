@@ -143,7 +143,7 @@ export default {
         {
           title: "Total developers",
           key: "total_developers",
-          sortable: true,
+          sortable: false,
         },
         {
           title: "Actions",
