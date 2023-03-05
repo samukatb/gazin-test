@@ -7,8 +7,10 @@ Gazin test is a project to show my skills in frontend and backend made with Nest
 
 ### Requirements
 [Docker](https://www.docker.com/) - Optional - To run everything effortlessly
-[yarn](https://yarnpkg.com/) 
-[PostgreSQL](https://www.postgresql.org/) - Optional - Only if you run without docker
+
+ [yarn](https://yarnpkg.com/) - Required
+ 
+ [PostgreSQL](https://www.postgresql.org/) - Optional - Only if you run without docker
 
 ### First steps
 ```
