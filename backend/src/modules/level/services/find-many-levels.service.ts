@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationResponse } from '../../../../src/@types/pagination-response.type';
-import { PaginationQueryDto } from '../../../../src/shared/dto/pagination.dto';
-import { AppError } from '../../../../src/shared/utils/app-error.exception';
-import { DB_NAME } from '../../../../src/shared/utils/constants';
+import { PaginationResponse } from '../../../@types/pagination-response.type';
+import { PaginationQueryDto } from '../../../shared/dto/pagination.dto';
+import { AppError } from '../../../shared/utils/app-error.exception';
+import { DB_NAME } from '../../../shared/utils/constants';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Level } from '../entities/level.entity';
 

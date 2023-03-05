@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DB_NAME } from '../../../../src/shared/utils/constants';
+import { DB_NAME } from '../../../shared/utils/constants';
 import { Repository } from 'typeorm';
 import { UpdateLevelDto } from '../dto/update-level.dto';
 import { Level } from '../entities/level.entity';

@@ -5,7 +5,7 @@ import { HttpStatus } from '@nestjs/common';
 import { AppError } from '../../../src/shared/utils/app-error.exception';
 import FindManyLevelsService from '../../../src/modules/level/services/find-many-levels.service';
 
-describe('FindLevelService', () => {
+describe('FindManyLevelService', () => {
   let findManyLevelsService: FindManyLevelsService;
   let levelRepository: jest.Mocked<Repository<Level>>;
 
@@ -18,7 +18,7 @@ describe('FindLevelService', () => {
   });
 
   describe('execute', () => {
-    it('should find a level successfully', async () => {
+    it('should find many levels successfully', async () => {
       const createLevelDto: CreateLevelDto = {
         name: 'Test Level',
       };

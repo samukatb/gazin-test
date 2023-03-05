@@ -27,16 +27,6 @@ services:
       - POSTGRES_USER=gazin
       - POSTGRES_PASSWORD=gazin
       - POSTGRES_DB=gazin
-  db-test:
-    container_name: "gazin-db-test"
-    image: postgres
-    restart: always
-    ports:
-      - "5433:5433"
-    environment:
-      - POSTGRES_USER=gazintest
-      - POSTGRES_PASSWORD=gazintest
-      - POSTGRES_DB=gazintest
   frontend:
     container_name: "gazin-frontend"
     build:

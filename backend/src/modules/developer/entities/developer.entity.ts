@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Level } from '../../../../src/modules/level/entities/level.entity';
+import { Level } from '../../../modules/level/entities/level.entity';
 import {
   Column,
   Entity,

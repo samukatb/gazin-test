@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Developer } from '../../../../src/modules/developer/entities/developer.entity';
+import { Developer } from '../../../modules/developer/entities/developer.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('levels')
@@ -15,7 +15,7 @@ export class Level {
   developers: Developer[];
 
   @Expose({ name: 'total_developers' })
-  totalDevelopers(): number {
+  totalDevelopers?(): number {
     return this.developers?.length;
   }
 }

@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateLevelDto } from './create-level.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class UpdateLevelDto extends PartialType(CreateLevelDto) {}
+export class UpdateLevelDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+}

@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AppError } from '../../../../src/shared/utils/app-error.exception';
-import { DB_NAME } from '../../../../src/shared/utils/constants';
+import { AppError } from '../../../shared/utils/app-error.exception';
+import { DB_NAME } from '../../../shared/utils/constants';
 import { Repository } from 'typeorm';
 import { CreateLevelDto } from '../dto/create-level.dto';
 import { Level } from '../entities/level.entity';

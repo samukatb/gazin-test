@@ -1,5 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -15,6 +17,16 @@ async function bootstrap() {
   );
 
   app.enableCors();
+
+  const config = new DocumentBuilder()
+    .setTitle('Gazin Test API')
+    .setDescription('The Gazin Test API to create developers and levels')
+    .setVersion('1.0')
+    .addTag('Gazin')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(3000);
 }

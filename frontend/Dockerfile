@@ -1,11 +1,12 @@
 FROM node:14
 
-WORKDIR /app
+WORKDIR ./app
 
-COPY package*.json ./
+COPY ./backend/tsconfig*.json ./
+COPY ./backend/package.json ./
 
-RUN npm install
+RUN yarn install
 
-COPY . .
+COPY ./backend .
 
-CMD ["npm", "run", "serve"]
+CMD ["yarn", "dev"]
