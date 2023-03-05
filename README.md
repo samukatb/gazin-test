@@ -7,8 +7,8 @@ Gazin test is a project to show my skills in frontend and backend made with Nest
 
 ### Requirements
 [Docker](https://www.docker.com/) - Optional - To run everything effortlessly
- [yarn](https://yarnpkg.com/) 
- [PostgreSQL](https://www.postgresql.org/) - Optional - Only if you run without docker
+[yarn](https://yarnpkg.com/) 
+[PostgreSQL](https://www.postgresql.org/) - Optional - Only if you run without docker
 
 ### First steps
 ```
@@ -47,12 +47,17 @@ $ docker compose up
 Once you run the docker compose you are ready to go
 Go `localhost:8080`
 
+## Tests
 
+To run the backend tests, go to the backend folder and run the following commands
+```
+$ yarn test
+```
 
 ## Endpoints
 
 You can see all endpoints with the Swagger, just run the backend and access `/api`   
-E.g `localhost:3000/api                                                            `
+E.g `localhost:3000/api`
 
 
 ## License
