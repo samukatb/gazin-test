@@ -88,7 +88,6 @@ export default {
       sexOptions: [
         { value: "M", text: "Male" },
         { value: "F", text: "Female" },
-        { value: "O", text: "Other" },
       ],
       form: {
         name: "",
